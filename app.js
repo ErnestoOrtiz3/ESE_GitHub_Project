@@ -137,6 +137,7 @@ function lookup(obj, k) {
   var readWithSecrets = "";
   var readAndSecretsLock = true;
   var readWithSecretsCount = 0;
+  var projectNumber = 1;
   function verifyActions(){
     for (let idx = 0; idx < filesArray.length; idx++){
       for (let i = 0; i < filesArray[idx].length; i++){
@@ -152,11 +153,15 @@ function lookup(obj, k) {
           //If the action does not come for a verified org, we check if the project pins the action to a commit.
           if(!verifiedActions.includes(actionName[0])){
             if(seeOutputInTerminal){
-              console.log("project number ", i, " unverified action       ", action);
+              console.log("project number ", projectNumber, " unverified action       ", action);
             }
           
             if (actionName.length > 1){
-              if (isNaN(actionName[1][0]) || actionName[1][1] == "."){
+              if (actionName[1] == 'master' || actionName[1] == 'main' || 
+              actionName[1] == 'latest' || actionName[1] == 'stable' || actionName[1][0] == 'v' || actionName[1][1] == "." ||
+              (actionName[1][0] == 'r'&& actionName[1][1] == 'e' && actionName[1][2] == 'l' &&
+              actionName[1][3] == 'e' && actionName[1][4] == 'a' && actionName[1][5] == 's'&&
+              actionName[1][6] == 'e')){
                 if(seeOutputInTerminal){
                   console.log("The unverified action is not pinned");
                   console.log("");
@@ -229,7 +234,7 @@ function lookup(obj, k) {
         }
         else{
           if(seeOutputInTerminal){
-            console.log("project number ", i, " verified action   ", action);
+            console.log("project number ", projectNumber, " verified action   ", action);
           }
         }
       }
@@ -238,7 +243,8 @@ function lookup(obj, k) {
       for(let k = 0; k < projectActions.length; k++){
         projectActions.pop();
       }
-    }
+    projectNumber = projectNumber + 1;
+  }
   }
   }
 
